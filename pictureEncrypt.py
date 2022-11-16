@@ -28,63 +28,70 @@ def rgbToHex(rgb):
 	return '%02x%02x%02x' % rgb
 
 def Encrypt(imageFile):
-	message = input('Enter message: ')
-	binary = toBin(message)
-	n = 2
-	binaryList = [binary[i:i+n] for i in range(0, len(binary), n)]
-	length = len(binaryList)-1
-	x = 0
-	
-	input_image = Image.open(imageFile) 
-	pixel_map = input_image.load() 
-	width, height = input_image.size
-	
-	for i in range(height): 
-		for j in range(width):
-			r, g, b = input_image.getpixel((j, i)) 
-			if x <= length:
-				hex = rgbToHex((r, g, b))
-				blueBin = hex_dict[hex[5]]
-				blueBin2 = blueBin[:2] + binaryList[x]
-				hex2 = hex[:5]+bin_dict[blueBin2]
-				c = hexToRgb(hex2)
-				r = c[0]
-				g = c[1]
-				b = c[2]
-				x += 1
-			else:
-				pass
-			pixel_map[j, i] = (r, g, b) 
-	
-	input_image.save("encrypt.png", format="png")
-	input_image.show()
+	try:
+		message = input('Enter message: ')
+		binary = toBin(message)
+		n = 2
+		binaryList = [binary[i:i+n] for i in range(0, len(binary), n)]
+		length = len(binaryList)-1
+		x = 0
+		
+		input_image = Image.open(imageFile) 
+		pixel_map = input_image.load() 
+		width, height = input_image.size
+		
+		for i in range(height): 
+			for j in range(width):
+				r, g, b = input_image.getpixel((j, i)) 
+				if x <= length:
+					hex = rgbToHex((r, g, b))
+					blueBin = hex_dict[hex[5]]
+					blueBin2 = blueBin[:2] + binaryList[x]
+					hex2 = hex[:5]+bin_dict[blueBin2]
+					c = hexToRgb(hex2)
+					r = c[0]
+					g = c[1]
+					b = c[2]
+					x += 1
+				else:
+					pass
+				pixel_map[j, i] = (r, g, b) 
+		
+		input_image.save("encrypt.png", format="png")
+		input_image.show()
+	except AttributeError:
+		print("Oops, something went wrong!\nPlease try again! :(")
 
 def Decrypt(imageFile):
-	input_image = Image.open(imageFile) 
-	pixel_map = input_image.load() 
-	width, height = input_image.size
-	messageList = []
-	
-	for i in range(height): 
-		for j in range(width):
-			r, g, b = input_image.getpixel((j, i)) 
-			hex = rgbToHex((r, g, b))
-			blueBin = hex_dict[hex[5]]
-			messageList.append(str(blueBin[2:]))
-			pixel_map[j, i] = (r, g, b)
-	fullList = ''.join(messageList)
-	n = 8
-	finalMessage = []
-	message = [fullList[i:i+n] for i in range(0, len(fullList), n)]
-	
-	for item in message:
-		finalMessage.append(toString(item))
-	finalMessage = ''.join(finalMessage)
-	
-	print('The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage)
+	try:
+		input_image = Image.open(imageFile) 
+		pixel_map = input_image.load() 
+		width, height = input_image.size
+		messageList = []
+		
+		for i in range(height): 
+			for j in range(width):
+				r, g, b = input_image.getpixel((j, i)) 
+				hex = rgbToHex((r, g, b))
+				blueBin = hex_dict[hex[5]]
+				messageList.append(str(blueBin[2:]))
+				pixel_map[j, i] = (r, g, b)
+		fullList = ''.join(messageList)
+		n = 8
+		finalMessage = []
+		message = [fullList[i:i+n] for i in range(0, len(fullList), n)]
+		
+		for item in message:
+			finalMessage.append(toString(item))
+		finalMessage = ''.join(finalMessage)
+		
+		print('The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage)
+	except AttributeError:
+		print("Oops, something went wrong!\nPlease try again! :(")
 
 def selectFile():
-	filename = fd.askopenfilename()
+	filetypes = (('png files', '*.png'),('jpg files', '*.jpg'),('jpeg files', '*.jpeg'),('All files', '*.*'))
+	filename = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
 	fileEdit = ""
 	for char in filename:
 		if char =="/":
