@@ -1,4 +1,5 @@
 from PIL import Image
+from tkinter import filedialog as fd
 
 hex_dict = {'0':'0000','1':'0001','2':'0010','3':'0011','4':'0100','5':'0101','6':'0110','7':'0111','8':'1000','9':'1001','a':'1010','b':'1011','c':'1100','d':'1101','e':'1110','f':'1111'}
 
@@ -82,3 +83,28 @@ def Decrypt(imageFile):
 	
 	print('The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage)
 
+def selectFile():
+	filename = fd.askopenfilename()
+	fileEdit = ""
+	for char in filename:
+		if char =="/":
+			fileEdit += "\\"
+		else:
+			fileEdit += char
+	return fileEdit
+
+mode = " "
+while mode.lower()[0] != "e" and mode.lower()[0] != "d":
+	mode = input("Please select encrypt (e) or decrypt (d): ")
+	if mode == "":
+		mode = " "
+	else:
+		pass
+selectedFile = selectFile()
+
+if mode.lower()[0] == "e":
+	Encrypt(selectedFile)
+elif mode.lower()[0] == "d":
+	Decrypt(selectedFile)
+else:
+	print("Oops, something went wrong!\nPlease try again! :(")
