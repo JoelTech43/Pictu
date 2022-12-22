@@ -1,3 +1,4 @@
+import tkinter as tk
 from PIL import Image
 from tkinter import filedialog as fd
 
@@ -27,15 +28,16 @@ def hexToRgb(value):
 def rgbToHex(rgb):
 	return '%02x%02x%02x' % rgb
 
-def Encrypt(imageFile):
+def Encrypt():
 	try:
-		message = input('Enter message: ')
+		message = entry1.get("1.0",END)
 		binary = toBin(message)
 		n = 2
 		binaryList = [binary[i:i+n] for i in range(0, len(binary), n)]
 		length = len(binaryList)-1
 		x = 0
 		
+		imageFile = selectFile()
 		input_image = Image.open(imageFile) 
 		pixel_map = input_image.load() 
 		width, height = input_image.size
@@ -62,8 +64,9 @@ def Encrypt(imageFile):
 	except AttributeError:
 		print("Oops, something went wrong!\nPlease try again! :(")
 
-def Decrypt(imageFile):
+def Decrypt():
 	try:
+		imageFile = selectFile()
 		input_image = Image.open(imageFile) 
 		pixel_map = input_image.load() 
 		width, height = input_image.size
@@ -85,7 +88,7 @@ def Decrypt(imageFile):
 			finalMessage.append(toString(item))
 		finalMessage = ''.join(finalMessage)
 		
-		print('The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage)
+		output["text"] = 'The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage
 	except AttributeError:
 		print("Oops, something went wrong!\nPlease try again! :(")
 
@@ -100,18 +103,24 @@ def selectFile():
 			fileEdit += char
 	return fileEdit
 
-mode = " "
-while mode.lower()[0] != "e" and mode.lower()[0] != "d":
-	mode = input("Please select encrypt (e) or decrypt (d): ")
-	if mode == "":
-		mode = " "
-	else:
-		pass
-selectedFile = selectFile()
+window = tk.Tk()
+window.geometry("500x455")
 
-if mode.lower()[0] == "e":
-	Encrypt(selectedFile)
-elif mode.lower()[0] == "d":
-	Decrypt(selectedFile)
-else:
-	print("Oops, something went wrong!\nPlease try again! :(")
+Instruct1 = tk.Label(window, text="Enter message:",font=("Arial", 12))
+Instruct1.pack(padx=10,pady=5,anchor="w")
+entry1 = tk.Text(window, width=60, height=7)
+entry1.pack(padx=10, pady=10)
+btnFrame = tk.Frame(window)
+btnFrame.columnconfigure(0, weight=1)
+btnFrame.columnconfigure(1, weight=1)
+EncryptBtn = tk.Button(btnFrame, text="Encrypt", font=("Arial", 12), command=Encrypt)
+EncryptBtn.grid(column=0,row=1, sticky=tk.E+tk.W)
+DecryptBtn = tk.Button(btnFrame, text="Decrypt", font=("Arial", 12), command=Decrypt)
+DecryptBtn.grid(column=1,row=1, sticky=tk.E+tk.W)
+btnFrame.pack(pady=10,fill="x")
+scroll = tk.Scrollbar(window)
+scroll.pack(side='right')
+output = tk.Label(window, text = "", font = ("Arial", 12))
+output.pack(padx=10, pady=10, anchor="w")
+
+window.mainloop()
