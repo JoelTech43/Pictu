@@ -30,7 +30,7 @@ def rgbToHex(rgb):
 
 def Encrypt():
 	try:
-		message = entry1.get("1.0",END)
+		message = entry1.get("1.0","end")
 		binary = toBin(message)
 		n = 2
 		binaryList = [binary[i:i+n] for i in range(0, len(binary), n)]
