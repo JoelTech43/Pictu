@@ -88,9 +88,9 @@ def Decrypt():
 			finalMessage.append(toString(item))
 		finalMessage = ''.join(finalMessage)
 		
-		output["text"] = 'The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage
+		output.insert("end",'The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage)
 	except AttributeError:
-		print("Oops, something went wrong!\nPlease try again! :(")
+		output.insert("end","Oops, something went wrong!\nPlease try again! :(")
 
 def selectFile():
 	filetypes = (('png files', '*.png'),('jpg files', '*.jpg'),('jpeg files', '*.jpeg'),('All files', '*.*'))
@@ -105,22 +105,28 @@ def selectFile():
 
 window = tk.Tk()
 window.geometry("500x455")
+window.config(background="#0066ff")
+window.title("Picture Encrypt")
+window.tk.call('wm', 'iconphoto', window._w, tk.PhotoImage(file="spy.png"))
 
-Instruct1 = tk.Label(window, text="Enter message:",font=("Arial", 12))
+Instruct1 = tk.Label(window, text="Enter message:",font=("Arial", 12, "bold"),background="#0066ff",foreground="#ffffff")
 Instruct1.pack(padx=10,pady=5,anchor="w")
-entry1 = tk.Text(window, width=60, height=7)
+entry1 = tk.Text(window, width=60, height=7,background="#99c2ff",foreground="#ffffff", font=("Arial", 12, "bold"))
 entry1.pack(padx=10, pady=10)
 btnFrame = tk.Frame(window)
 btnFrame.columnconfigure(0, weight=1)
 btnFrame.columnconfigure(1, weight=1)
-EncryptBtn = tk.Button(btnFrame, text="Encrypt", font=("Arial", 12), command=Encrypt)
+EncryptBtn = tk.Button(btnFrame, text="Encrypt", font=("Arial", 12, "bold"), command=Encrypt,background="#99c2ff",foreground="#ffffff")
 EncryptBtn.grid(column=0,row=1, sticky=tk.E+tk.W)
-DecryptBtn = tk.Button(btnFrame, text="Decrypt", font=("Arial", 12), command=Decrypt)
+DecryptBtn = tk.Button(btnFrame, text="Decrypt", font=("Arial", 12, "bold"), command=Decrypt,background="#99c2ff", foreground="#ffffff")
 DecryptBtn.grid(column=1,row=1, sticky=tk.E+tk.W)
-btnFrame.pack(pady=10,fill="x")
-scroll = tk.Scrollbar(window)
-scroll.pack(side='right')
-output = tk.Label(window, text = "", font = ("Arial", 12))
-output.pack(padx=10, pady=10, anchor="w")
+btnFrame.pack(fill="x")
+scrollbar = tk.Scrollbar(window,orient="vertical")
+scrollbar.pack(side = tk.RIGHT, fill = "y" )
 
+output = tk.Text(window, font = ("Arial", 12, "bold"), width=60, height=7, background="#99c2ff", foreground="#ffffff")
+output.pack(padx=10, anchor="w",side=tk.LEFT)
+
+output.config(yscrollcommand=scrollbar.set)
+scrollbar.config(command=output.yview)
 window.mainloop()
