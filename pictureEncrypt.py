@@ -1,3 +1,4 @@
+import tkinter as tk
 from PIL import Image
 from tkinter import filedialog as fd
 
@@ -27,15 +28,16 @@ def hexToRgb(value):
 def rgbToHex(rgb):
 	return '%02x%02x%02x' % rgb
 
-def Encrypt(imageFile):
+def Encrypt():
 	try:
-		message = input('Enter message: ')
+		message = entry1.get("1.0","end")
 		binary = toBin(message)
 		n = 2
 		binaryList = [binary[i:i+n] for i in range(0, len(binary), n)]
 		length = len(binaryList)-1
 		x = 0
 		
+		imageFile = selectFile()
 		input_image = Image.open(imageFile) 
 		pixel_map = input_image.load() 
 		width, height = input_image.size
@@ -62,8 +64,9 @@ def Encrypt(imageFile):
 	except AttributeError:
 		print("Oops, something went wrong!\nPlease try again! :(")
 
-def Decrypt(imageFile):
+def Decrypt():
 	try:
+		imageFile = selectFile()
 		input_image = Image.open(imageFile) 
 		pixel_map = input_image.load() 
 		width, height = input_image.size
@@ -85,9 +88,9 @@ def Decrypt(imageFile):
 			finalMessage.append(toString(item))
 		finalMessage = ''.join(finalMessage)
 		
-		print('The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage)
+		output.insert("end",'The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage)
 	except AttributeError:
-		print("Oops, something went wrong!\nPlease try again! :(")
+		output.insert("end","Oops, something went wrong!\nPlease try again! :(")
 
 def selectFile():
 	filetypes = (('png files', '*.png'),('jpg files', '*.jpg'),('jpeg files', '*.jpeg'),('All files', '*.*'))
@@ -100,18 +103,30 @@ def selectFile():
 			fileEdit += char
 	return fileEdit
 
-mode = " "
-while mode.lower()[0] != "e" and mode.lower()[0] != "d":
-	mode = input("Please select encrypt (e) or decrypt (d): ")
-	if mode == "":
-		mode = " "
-	else:
-		pass
-selectedFile = selectFile()
+window = tk.Tk()
+window.geometry("500x455")
+window.config(background="#0066ff")
+window.title("Picture Encrypt")
+window.tk.call('wm', 'iconphoto', window._w, tk.PhotoImage(file="spy.png"))
 
-if mode.lower()[0] == "e":
-	Encrypt(selectedFile)
-elif mode.lower()[0] == "d":
-	Decrypt(selectedFile)
-else:
-	print("Oops, something went wrong!\nPlease try again! :(")
+Instruct1 = tk.Label(window, text="Enter message:",font=("Arial", 12, "bold"),background="#0066ff",foreground="#ffffff")
+Instruct1.pack(padx=10,pady=5,anchor="w")
+entry1 = tk.Text(window, width=60, height=7,background="#99c2ff",foreground="#ffffff", font=("Arial", 12, "bold"))
+entry1.pack(padx=10, pady=10)
+btnFrame = tk.Frame(window)
+btnFrame.columnconfigure(0, weight=1)
+btnFrame.columnconfigure(1, weight=1)
+EncryptBtn = tk.Button(btnFrame, text="Encrypt", font=("Arial", 12, "bold"), command=Encrypt,background="#99c2ff",foreground="#ffffff")
+EncryptBtn.grid(column=0,row=1, sticky=tk.E+tk.W)
+DecryptBtn = tk.Button(btnFrame, text="Decrypt", font=("Arial", 12, "bold"), command=Decrypt,background="#99c2ff", foreground="#ffffff")
+DecryptBtn.grid(column=1,row=1, sticky=tk.E+tk.W)
+btnFrame.pack(fill="x")
+scrollbar = tk.Scrollbar(window,orient="vertical")
+scrollbar.pack(side = tk.RIGHT, fill = "y" )
+
+output = tk.Text(window, font = ("Arial", 12, "bold"), width=60, height=7, background="#99c2ff", foreground="#ffffff")
+output.pack(padx=10, anchor="w",side=tk.LEFT)
+
+output.config(yscrollcommand=scrollbar.set)
+scrollbar.config(command=output.yview)
+window.mainloop()
