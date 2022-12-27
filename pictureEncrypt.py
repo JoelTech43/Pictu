@@ -101,10 +101,25 @@ def selectFile():
 			fileEdit += "\\"
 		else:
 			fileEdit += char
+	reverse = fileEdit[::-1]
+	nameOfFile = []
+	for char in reverse:
+		if char != "\\":
+			nameOfFile.append(char)
+		else:
+			break
+	nameOfFileString = ""
+	nameOfFile=nameOfFile[::-1]
+	for abc in nameOfFile:
+		nameOfFileString+=abc
+		print(abc)
+	print(nameOfFile)
+	print(nameOfFileString)
+	selectedFileName["text"]= "Selected file: " + nameOfFileString
 	return fileEdit
 
 window = tk.Tk()
-window.geometry("500x455")
+window.geometry("500x420")
 window.config(background="#0066ff")
 window.title("Picture Encrypt")
 window.tk.call('wm', 'iconphoto', window._w, tk.PhotoImage(file="spy.png"))
@@ -120,7 +135,9 @@ EncryptBtn = tk.Button(btnFrame, text="Encrypt", font=("Arial", 12, "bold"), com
 EncryptBtn.grid(column=0,row=1, sticky=tk.E+tk.W)
 DecryptBtn = tk.Button(btnFrame, text="Decrypt", font=("Arial", 12, "bold"), command=Decrypt,background="#99c2ff", foreground="#ffffff")
 DecryptBtn.grid(column=1,row=1, sticky=tk.E+tk.W)
-btnFrame.pack(fill="x")
+btnFrame.pack(fill="x",padx=10)
+selectedFileName = tk.Label(window,background="#0066ff",foreground="#ffffff",font=("Arial",12,"bold"),text="Selected File: ")
+selectedFileName.pack(padx=10,pady=10,anchor="w")
 scrollbar = tk.Scrollbar(window,orient="vertical")
 scrollbar.pack(side = tk.RIGHT, fill = "y" )
 
