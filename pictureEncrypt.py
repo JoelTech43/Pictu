@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image
 from tkinter import filedialog as fd
 import conversions as con
+import datetime
 
 hex_dict = {'0':'0000','1':'0001','2':'0010','3':'0011','4':'0100','5':'0101','6':'0110','7':'0111','8':'1000','9':'1001','a':'1010','b':'1011','c':'1100','d':'1101','e':'1110','f':'1111'}
 
@@ -23,7 +24,7 @@ def Encrypt():
 		
 		for i in range(height): 
 			for j in range(width):
-				r, g, b = input_image.getpixel((j, i)) 
+				r, g, b, k = input_image.getpixel((j, i)) 
 				if x <= length:
 					hex = con.rgbToHex((r, g, b))
 					blueBin = hex_dict[hex[5]]
@@ -37,8 +38,11 @@ def Encrypt():
 				else:
 					pass
 				pixel_map[j, i] = (r, g, b) 
-		
-		input_image.save("encrypt.png", format="png")
+
+		date_time = datetime.datetime.now()
+		saveNameData = date_time.strftime("%d-%m-%Y")
+		saveName = saveNameData + ".png"
+		input_image.save(saveName, format="png")
 		input_image.show()
 	except AttributeError:
 		print("Oops, something went wrong!\nPlease try again! :(")
@@ -53,7 +57,7 @@ def Decrypt():
 		
 		for i in range(height): 
 			for j in range(width):
-				r, g, b = input_image.getpixel((j, i)) 
+				r, g, b, k = input_image.getpixel((j, i)) 
 				hex = con.rgbToHex((r, g, b))
 				blueBin = hex_dict[hex[5]]
 				messageList.append(str(blueBin[2:]))
@@ -91,9 +95,7 @@ def selectFile():
 	nameOfFile=nameOfFile[::-1]
 	for abc in nameOfFile:
 		nameOfFileString+=abc
-		print(abc)
-	print(nameOfFile)
-	print(nameOfFileString)
+		
 	selectedFileName["text"]= "Selected file: " + nameOfFileString
 	return fileEdit
 
