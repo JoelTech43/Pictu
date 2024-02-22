@@ -70,7 +70,7 @@ def Decrypt():
 		for item in message:
 			finalMessage.append(con.toString(item))
 		finalMessage = ''.join(finalMessage)
-		
+		output.delete('1.0', tk.END)
 		output.insert("end",'The end may look garbled. If it is, the message didn\'t fill all the image\'s pixels. Just ignore it!\nYour message is: %s' % finalMessage)
 	except AttributeError:
 		output.insert("end","Oops, something went wrong!\nPlease try again! :(")
